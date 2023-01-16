@@ -16,9 +16,10 @@ public class PlayerController : MonoBehaviour
     private float speed= 8f;
     private float jumpingPower = 16f;
     private bool isFacingRight = true;
+    //private bool grounded;
     private Animator anim;
 
-    private enum MovementState {idle, run, jumping, falling}
+    //private enum MovementState {idle, run, jumping, falling}
 
 
     private void Start()
@@ -40,7 +41,11 @@ public class PlayerController : MonoBehaviour
             Flip();
         }
 
-        UpdateAnimationState();
+        //Set animator parameters
+        anim.SetBool("run", horizontal != 0);
+        anim.SetBool("grounded", IsGrounded());
+
+        //UpdateAnimationState();
 
     }
 
@@ -55,6 +60,8 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
+
+        anim.SetTrigger("jump");
 
     }
 
@@ -71,12 +78,23 @@ public class PlayerController : MonoBehaviour
         transform.localScale = localScale;
     }
 
+/*    private void Jump()
+    {
+
+    }*/
+
     public void Move(InputAction.CallbackContext context)
     {
         horizontal = context.ReadValue<Vector2>().x;
     }
 
-    private void UpdateAnimationState()
+    public bool canAttack()
+    {
+        return horizontal == 0 && IsGrounded(); 
+    }
+
+
+/*    private void UpdateAnimationState()
     {
         MovementState state;
 
@@ -94,16 +112,15 @@ public class PlayerController : MonoBehaviour
             state = MovementState.idle;
         }
 
-        if (rb.velocity.y > .1f)
+*//*        if (rb.velocity.y > .1f)
         {
             state = MovementState.jumping;
         }
         else if (rb.velocity.y < -.1f)
         {
             state = MovementState.falling;
-        }
+        }*//*
 
         anim.SetInteger("state", (int)state);
-    }
-
+    }*/
 }
